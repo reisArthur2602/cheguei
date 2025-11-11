@@ -1,25 +1,39 @@
 import { Card } from '@/components/ui/card';
+import { useClinicStore } from '@/stores/clinic-store';
 import { usePatientStore } from '@/stores/patient-store';
 import { CheckCircle, FileText } from 'lucide-react';
-import { Link } from 'react-router';
-const actions = [
-    {
-        title: 'Retirar Exame',
-        description: 'Retire seus exames disponíveis',
-        icon: FileText,
+import { useEffect } from 'react';
+import { Link, useNavigate, useParams } from 'react-router';
 
-        path: 'exam',
-    },
-    {
-        title: 'Confirmar Presença',
-        description: 'Confirme sua presença em consultas',
-        icon: CheckCircle,
-
-        path: 'appointment',
-    },
-];
 export const ClinicDashboardPage = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
     const { patient } = usePatientStore();
+    const { clinic } = useClinicStore();
+
+    const actions = [
+        {
+            title: 'Retirar Exame',
+            description: 'Retire seus exames disponíveis',
+            icon: FileText,
+            path: `/clinic/${id}/dashboard/exam`,
+            enabled: clinic?.servicesAvailable.getExams,
+        },
+        {
+            title: 'Confirmar Presença',
+            description: 'Confirme sua presença em consultas',
+            icon: CheckCircle,
+            path: `/clinic/${id}/dashboard/appointment`,
+            enabled: clinic?.servicesAvailable.confirmAppointment,
+        },
+    ];
+
+    const availableActions = actions.filter((action) => action.enabled);
+
+    useEffect(() => {
+        if (availableActions.length === 1) navigate(availableActions[0].path);
+    }, [availableActions, navigate]);
+
     return (
         <div className="flex-1">
             <div className="text-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -30,7 +44,7 @@ export const ClinicDashboardPage = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
-                {actions.map((action) => {
+                {availableActions.map((action) => {
                     const Icon = action.icon;
                     return (
                         <Link to={action.path} key={action.title}>

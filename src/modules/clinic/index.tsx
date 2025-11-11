@@ -1,23 +1,35 @@
 import { NumericKeyboard } from '@/components/numeric-keyboard';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { getClinic } from '@/data/clinic';
 import { useGetPatient } from '@/hooks/use-get-patient';
 import { formatCPF } from '@/lib/format-cpf';
+import { useClinicStore } from '@/stores/clinic-store';
 import { usePatientStore } from '@/stores/patient-store';
 import { User } from 'lucide-react';
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router';
 import { toast } from 'sonner';
 
 export const ClinicPage = () => {
+    const { id } = useParams();
+    const currentClinicId = Number(id);
     const navigate = useNavigate();
 
     const [cpf, setCpf] = useState('');
     const { setPatient } = usePatientStore();
-
     const cleanCPF = cpf.replace(/\D/g, '');
-
     const { patient } = useGetPatient(cleanCPF.length === 11 ? cleanCPF : undefined);
+
+    const clinic = getClinic(currentClinicId);
+    const { setClinic } = useClinicStore();
+
+    
+    useEffect(() => {
+        if (clinic) setClinic(clinic);
+    }, [clinic, setClinic]);
+
+    if (!clinic) return <Navigate to="/" />;
 
     const handleKeyPress = (key: string) => {
         if (key === 'backspace') {
@@ -39,7 +51,6 @@ export const ClinicPage = () => {
         }
 
         setPatient(patient);
-
         toast.success(`Bem-vindo(a), ${patient.name}!`);
         navigate('dashboard');
     };
