@@ -37,3 +37,26 @@ type Study = {
         size: number;
     }[];
 };
+
+type StudyStatus = 'PENDING' | 'REPORTING' | 'REPORTED' | 'DELIVERED';
+
+type ExamScheduleResponse = {
+    ok: boolean;
+    cpf: string;
+    total: number;
+    dados: ExamData[];
+};
+
+type ExamData = {
+    idagenda: number;
+    datamarcada: string;
+    horamarcada: string;
+    nomepaciente: string;
+    idprontuario: number;
+    nomemedico: string;
+    especialidade: string;
+    convenio: string;
+    c_tipo: number;
+    localatendimento: string;
+    tipoatendimento: string;
+};

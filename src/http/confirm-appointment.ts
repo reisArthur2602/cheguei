@@ -1,15 +1,17 @@
-import axios from "axios";
+import axios from 'axios';
 
 type Request = {
-  cpfpaciente: string;
-  idLocal: string;
+    idAgenda: string;
+    cpfPaciente: string;
 };
 
-export const confirmAppointment = async ({ cpfpaciente, idLocal }: Request) => {
-  const { data } = await axios.post(
-    "https://200.100.100.17:8096/api/agenda/listaagendamentoporcpf",
-    { cpfpaciente, idLocal }
-  );
+export const confirmAppointment = async ({ idAgenda, cpfPaciente }: Request) => {
+    const { data } = await axios.post(
+        'https://servidorprincipal.no-ip.info:8096/api/agenda/atualizahorachegada',
+        { idAgenda, cpfPaciente }
+    );
 
-  return data;
+    return data;
 };
+
+

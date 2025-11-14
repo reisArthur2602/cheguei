@@ -11,6 +11,12 @@ export const clinics: Clinic[] = [
         servicesAvailable: { confirmAppointment: true, getExams: false },
         address: 'R. João de Almeida, 109',
     },
+    {
+        id: 8,
+        name: 'Life Care',
+        servicesAvailable: { confirmAppointment: true, getExams: true },
+        address: 'R. Laureano Rosa, 100',
+    },
 ];
 
 export const getClinic = (id: number) => clinics.find((clinic) => clinic.id === id);
